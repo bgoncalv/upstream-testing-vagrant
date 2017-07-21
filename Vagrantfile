@@ -105,6 +105,10 @@ Vagrant.configure("2") do |config|
         #If test name was given run the tests for it
         if [ -n "#{test_name}" ]; then
             git clone https://upstreamfirst.fedorainfracloud.org/#{test_name}.git
+            if [ $? -ne 0 ]; then
+                echo "FAIL: Could not clone repo for #{test_name}"
+                exit 1
+            fi
             cd #{test_name}
 
             #Check if tests have any reference to bugzillas
