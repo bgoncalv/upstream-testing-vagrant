@@ -113,7 +113,7 @@ Vagrant.configure("2") do |config|
 
             #Check if tests have any reference to bugzillas
             #using \\< and \\> to match whole words only
-            bz_regex="\\(\\<bug\\>\\|\\<bz\\>\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\+"
+            bz_regex="\\(\\<bug\\>\\|bz\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\+"
             grep --exclude-dir=.git -r -i -e "$bz_regex" .
             if [ $? -ne 1 ]; then
                 echo "FAIL: It seems there are references to bugzilla numbers!"
