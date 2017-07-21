@@ -106,6 +106,16 @@ Vagrant.configure("2") do |config|
         if [ -n "#{test_name}" ]; then
             git clone https://upstreamfirst.fedorainfracloud.org/#{test_name}.git
             cd #{test_name}
+
+            #Check if tests have any reference to bugzillas
+            #using \\< and \\> to match whole words only
+            bz_regex="\\(\\<bug\\>\\|\\<bz\\>\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\+"
+            grep --exclude-dir=.git -r -i -e "$bz_regex" .
+            if [ $? -ne 1 ]; then
+                echo "FAIL: It seems there are references to bugzilla numbers!"
+                exit 1
+            fi
+
             sudo ansible-playbook test_local.yml -e artifacts=$PWD/artifacts
             cat $PWD/artifacts/test.log
             #Check if any test did not pass
