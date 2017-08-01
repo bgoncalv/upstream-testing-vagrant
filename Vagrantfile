@@ -120,7 +120,11 @@ Vagrant.configure("2") do |config|
                 exit 1
             fi
 
-            sudo ansible-playbook test_local.yml -e artifacts=$PWD/artifacts
+            sudo ansible-playbook tests.yml -e artifacts=$PWD/artifacts
+            if [ $? -ne 0 ]; then
+                echo "FAIL: Could not execute ansible-playbook"
+                exit 1
+            fi
             cat $PWD/artifacts/test.log
             #Check if any test did not pass
             grep -ve ^PASS $PWD/artifacts/test.log
