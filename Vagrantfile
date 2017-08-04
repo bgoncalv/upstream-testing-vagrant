@@ -120,7 +120,11 @@ Vagrant.configure("2") do |config|
                 exit 1
             fi
 
-            sudo ansible-playbook tests.yml -e artifacts=$PWD/artifacts
+
+            ANSIBLE_INVENTORY=$(test -e inventory && echo inventory || echo /usr/share/ansible/inventory)
+            TEST_SUBJECTS="" 
+            TEST_ARTIFACTS=$PWD/artifacts
+            ansible-playbook --tags classic tests.yml
             if [ $? -ne 0 ]; then
                 echo "FAIL: Could not execute ansible-playbook"
                 exit 1
