@@ -120,6 +120,13 @@ Vagrant.configure("2") do |config|
                 exit 1
             fi
 
+            cve_regex="\\(CVE\\)\\([[:space:]]\\|#\\|:\\|-\\)*[[:digit:]]\\{4\\}"
+            grep --exclude-dir=.git -r -i -e "$cve_regex" .
+            if [ $? -ne 1 ]; then
+                echo "FAIL: It seems there are references to CVE!"
+                exit 1
+            fi
+
 
             ANSIBLE_INVENTORY=$(test -e inventory && echo inventory || echo /usr/share/ansible/inventory)
             TEST_SUBJECTS="" 
