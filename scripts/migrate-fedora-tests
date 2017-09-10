@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# Simple script to aid porting of a beakerlib test upstream
+#
+# Author: Miroslav Vadkerti <mvadkert@redhat.com>
+#
+OPTS="h"
+
+#
+# helpers
+#
+
+function print_info() {
+    printf ":: %s\n" "$@"
+}
+
+function print_error() {
+    printf "Error: %s\n" "$@"
+}
+
+function exit_error() {
+    print_error "$@"
+    exit 1
+}
+
+function help() {
+cat <<EOF
+    usage: $(basename $0) [-h]
+
+    Simple script to aid porting of a beakerlib test upstream. Run it in the directory with your tests.
+    
+    This script does 2 things:
+    - runs safe sed commands to fix known issues for porting
+    - shows warnings related to the migration that you should fix
+
+    Options:
+      -h         Print this help.
+EOF
+}
+
+#
+# Main
+#
+
+while getopts $OPTS OPTION
+do
+  case $OPTION in
+    h)
+        help
+        exit
+        ;;
+  esac
+done
+
+[ ! -e "Makefile" ] && exit_error "Makefile not found, are you in the test dir?"
+[ ! -e "runtest.sh" -a ! -e "lib.sh" ] && exit_error "runtest.sh or lib.sh not found, are you in the test dir?"
+
+# replacement
+if [ -e "Makefile" ]; then
+  print_info "include /usr/share/rhts/lib/rhts-make.include -> make optional"
+  sed -ri 's/^(include.*rhts-make\.include.*)/-\1/' Makefile
+fi
+
+if [ -e "runtest.sh" ]; then
+  print_info "remove sourcing of /usr/bin/rhts-environment.sh"
+  sed -ri 's/^(\.|source) \/usr\/bin\/rhts-environment\.sh.*/\[ -e \/usr\/bin\/rhts-environment\.sh \] \&\& \. \/usr\/bin\/rhts-environment\.sh/' runtest.sh
+fi
+
+# check file for 'BZ[0-9]+' and 'Bug: [0-9]+' strings
+bz_check(){
+  if egrep -i "bz[0-9]+|Bug:\s+[0-9]+" "$1" >> /dev/null 2>&1; then
+      print_info "In file '$1' were found following mentions of Bugzilla number:"
+      egrep -i --color=auto "bz[0-9]+|Bug:\s+[0-9]+" "$1"
+      printf "\n"
+  fi
+}
+
+# warnings - inappropriate content
+printf "\n"
+for file in *
+do
+  bz_check $file
+done
+
+# vim: ts=4 sw=4 sts=4 ft=sh et ai:
