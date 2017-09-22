@@ -25,6 +25,8 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
+  config.ssh.username = 'root'
+
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   #config.vm.box = "base"
@@ -94,6 +96,7 @@ Vagrant.configure("2") do |config|
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
         set -x
+        echo "vagrant" | passwd --stdin root
         dnf install -y git
 
         #install ansible test runner prerequisites
