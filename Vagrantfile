@@ -116,6 +116,13 @@ Vagrant.configure("2") do |config|
 
             #Check if tests have any reference to bugzillas
             #using \\< and \\> to match whole words only
+            bz_regex="\\(\\<bug\\>\\|bz\\)\\(_\\|#\\)*[[:digit:]]\\{4,9\\}"
+            #test case names should not have reference to bugzilla
+            find . -not -iwholename '*.git*' | grep -i -e "$bz_regex"
+            if [ $? -eq 0 ]; then
+                echo "FAIL: It looks like there is bugzilla reference on test case name"
+                exit 1
+            fi
             bz_regex="\\(\\<bug\\>\\|bz\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\{4,9\\}"
             #only interested on BZ numbers
             bz_nr=$(grep --exclude-dir=.git -r -i -o -e "$bz_regex" . | grep -o [[:digit:]]* | uniq)
