@@ -123,7 +123,7 @@ Vagrant.configure("2") do |config|
                 #Check if there is reference to private bugs
                 for bz in $bz_nr; do
                     echo "Checking if BZ($bz) is private"
-                    curl https://bugzilla.redhat.com/show_bug.cgi?id=$bz | grep "<title>Access Denied</title>"
+                    curl -s https://bugzilla.redhat.com/show_bug.cgi?id=$bz | grep "<title>Access Denied</title>"
                     if [ $? -eq 0 ]; then
                         echo "FAIL: bugzilla ($bz) is private!"
                         exit 1
