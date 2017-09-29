@@ -116,11 +116,19 @@ Vagrant.configure("2") do |config|
 
             #Check if tests have any reference to bugzillas
             #using \\< and \\> to match whole words only
-            bz_regex="\\(\\<bug\\>\\|bz\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\{4\\}"
-            grep --exclude-dir=.git -r -i -e "$bz_regex" .
-            if [ $? -ne 1 ]; then
-                echo "FAIL: It seems there are references to bugzilla numbers!"
-                exit 1
+            bz_regex="\\(\\<bug\\>\\|bz\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\{4,9\\}"
+            #only interested on BZ numbers
+            bz_nr=$(grep --exclude-dir=.git -r -i -o -e "$bz_regex" . | grep -o [[:digit:]]* | uniq)
+            if [ ! -z "$bz_nr" ]; then
+                #Check if there is reference to private bugs
+                for bz in $bz_nr; do
+                    echo "Checking if BZ($bz) is private"
+                    curl https://bugzilla.redhat.com/show_bug.cgi?id=$bz | grep "<title>Access Denied</title>"
+                    if [ $? -eq 0 ]; then
+                        echo "FAIL: bugzilla ($bz) is private!"
+                        exit 1
+                    fi
+                done
             fi
 
             cve_regex="\\(CVE\\)\\([[:space:]]\\|#\\|:\\|-\\)*[[:digit:]]\\{4\\}"
