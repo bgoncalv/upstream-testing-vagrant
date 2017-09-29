@@ -125,7 +125,7 @@ Vagrant.configure("2") do |config|
             fi
             bz_regex="\\(\\<bug\\>\\|bz\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\{4,9\\}"
             #only interested on BZ numbers
-            bz_nr=$(grep --exclude-dir=.git -r -i -o -e "$bz_regex" . | grep -o [[:digit:]]* | uniq)
+            bz_nr=$(grep --exclude-dir=.git -r -i -o -e "$bz_regex" . | grep -o -i -e "[[:digit:]]\\{4,9\\}" | uniq)
             if [ ! -z "$bz_nr" ]; then
                 #Check if there is reference to private bugs
                 for bz in $bz_nr; do
