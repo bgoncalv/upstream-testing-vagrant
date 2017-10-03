@@ -97,13 +97,13 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
         set -x
         echo "vagrant" | passwd --stdin root
-        dnf install -y git
+        dnf install --best -y git
 
         #install ansible test runner prerequisites
-        dnf install -y ansible python2-dnf libselinux-python
+        dnf install --best -y ansible python2-dnf libselinux-python
 
         dnf copr enable -y merlinm/standard-test-roles
-        dnf --enablerepo=updates-testing install -y  standard-test-roles
+        dnf --enablerepo=updates-testing install --best -y  standard-test-roles
 
         #If test name was given run the tests for it
         if [ -n "#{test_name}" ]; then

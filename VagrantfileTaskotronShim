@@ -97,10 +97,10 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
         set -x
         echo "vagrant" | passwd --stdin root
-        dnf install -y git
+        dnf install --best -y git
 
         #install libtaskotron
-        dnf install -y libtaskotron
+        dnf install --best -y libtaskotron
         
         git clone https://pagure.io/taskotron/task-standard-interface-shim.git
 
