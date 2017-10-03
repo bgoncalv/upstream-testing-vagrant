@@ -124,7 +124,7 @@ Vagrant.configure("2") do |config|
                 echo "FAIL: It looks like there is bugzilla reference on test case name"
                 exit 1
             fi
-            bz_regex="\\(\\<bug\\>\\|bz\\|https://bugzilla.redhat.com/show_bug.cgi?id=\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\{4,9\\}"
+            bz_regex="\\(\\<bug\\>\\|bz\\|bugzilla.redhat.com/show_bug.cgi?id=\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\{4,9\\}"
             #only interested on BZ numbers
             bz_nr=$(grep --exclude-dir=.git -r -i -o -e "$bz_regex" . | grep -o -i -e "[[:digit:]]\\{4,9\\}" | sort | uniq)
             if [ ! -z "$bz_nr" ]; then
