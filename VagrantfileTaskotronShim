@@ -4,7 +4,8 @@
 require 'getoptlong'
 
 opts = GetoptLong.new(
-  [ '--test-name', GetoptLong::OPTIONAL_ARGUMENT ]
+  [ '--test-name', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--command', '-c', GetoptLong::OPTIONAL_ARGUMENT ]
 )
 
 test_name=''
