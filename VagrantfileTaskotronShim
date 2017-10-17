@@ -26,15 +26,21 @@ Vagrant.configure("2") do |config|
   # https://docs.vagrantup.com.
 
   config.ssh.username = 'root'
+  config.ssh.insert_key = false
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   #config.vm.box = "base"
   #config.vm.box = "fedora/25-cloud-base"
-  config.vm.box = "fedora/26"
-  config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases"\
-                      "/26/CloudImages/x86_64/images/Fedora-Cloud-Base-Vagrant-26-1"\
-                      ".5.x86_64.vagrant-libvirt.box"
+  #config.vm.box = "fedora/26"
+  #config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases"\
+  #                    "/26/CloudImages/x86_64/images/Fedora-Cloud-Base-Vagrant-26-1"\
+  #                    ".5.x86_64.vagrant-libvirt.box"
+  #                      config.vm.box = "fedora/rawhide"
+  config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/development"\
+                      "/rawhide/CloudImages/x86_64/images/"\
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20171016.n.0.x86_64.vagrant-libvirt.box"
+
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -97,18 +103,19 @@ Vagrant.configure("2") do |config|
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
         set -x
-        echo "vagrant" | passwd --stdin root
+        #echo "vagrant" | passwd --stdin root
         dnf install --best -y git
 
         #install libtaskotron
         dnf install --best -y libtaskotron
-        
+
         git clone https://pagure.io/taskotron/task-standard-interface-shim.git
 
         #If test name was given run the tests for it
         if [ -n "#{test_name}" ]; then
             cd task-standard-interface-shim
-            latest_build=$(koji list-tagged --latest --quiet f26 #{test_name} | grep #{test_name} | awk '{print $1}')
+            rawhide_tag=$(koji list-tags | grep -e "^f[[:digit:]]*$" | tail -n 1)
+            latest_build=$(koji list-tagged --latest --quiet $rawhide_tag #{test_name} | grep #{test_name} | awk '{print $1}')
             runtask -i $latest_build -t koji_build runtask.yml > #{test_name}.log 2>&1
 
             cat #{test_name}.log

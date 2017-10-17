@@ -26,15 +26,20 @@ Vagrant.configure("2") do |config|
   # https://docs.vagrantup.com.
 
   config.ssh.username = 'root'
+  config.ssh.insert_key = false
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   #config.vm.box = "base"
   #config.vm.box = "fedora/25-cloud-base"
-  config.vm.box = "fedora/26"
-  config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases"\
-                      "/26/CloudImages/x86_64/images/Fedora-Cloud-Base-Vagrant-26-1"\
-                      ".5.x86_64.vagrant-libvirt.box"
+  #config.vm.box = "fedora/26"
+  #config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases"\
+  #                    "/26/CloudImages/x86_64/images/Fedora-Cloud-Base-Vagrant-26-1"\
+  #                    ".5.x86_64.vagrant-libvirt.box"
+  config.vm.box = "fedora/rawhide"
+  config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/development"\
+                      "/rawhide/CloudImages/x86_64/images/"\
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20171016.n.0.x86_64.vagrant-libvirt.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -97,7 +102,7 @@ Vagrant.configure("2") do |config|
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
         set -x
-        echo "vagrant" | passwd --stdin root
+#        echo "vagrant" | passwd --stdin root
         dnf install --best -y git
 
         #install ansible test runner prerequisites
@@ -105,6 +110,13 @@ Vagrant.configure("2") do |config|
 
         dnf copr enable -y merlinm/standard-test-roles
         dnf --enablerepo=updates-testing install --best -y  standard-test-roles
+        if [ $? -ne 0 ]; then
+            dnf install --best -y standard-test-roles
+            if [ $? -ne 0 ]; then
+                echo "FAIL: Could not install standard-test-roles"
+                exit 1;
+            fi
+        fi
 
         #If test name was given run the tests for it
         if [ -n "#{test_name}" ]; then
