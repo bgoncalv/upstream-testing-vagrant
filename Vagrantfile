@@ -119,7 +119,7 @@ Vagrant.configure("2") do |config|
             fi
         fi
 
-        #WORKAROUND
+        #WORKAROUND PR#73
         dnf install -y patch
         cd /etc/ansible/
         curl -sS https://pagure.io/standard-test-roles/pull-request/73.patch > 73.patch
