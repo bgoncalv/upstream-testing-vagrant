@@ -166,6 +166,13 @@ Vagrant.configure("2") do |config|
                 exit 1
             fi
 
+            #internal infra
+            grep -re ".*tp:.*redhat.com"
+            if [ $? -ne 1 ]; then
+                echo "FAIL: Found reference to internal infra"
+                exit 1
+            fi
+
 
             ANSIBLE_INVENTORY=$(test -e inventory && echo inventory || echo /usr/share/ansible/inventory)
             TEST_SUBJECTS="" 
