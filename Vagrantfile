@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "fedora/rawhide"
   config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/development"\
                       "/rawhide/CloudImages/x86_64/images/"\
-                      "Fedora-Cloud-Base-Vagrant-Rawhide-20171104.n.1.x86_64.vagrant-libvirt.box"
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20171114.n.0.x86_64.vagrant-libvirt.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -103,13 +103,11 @@ Vagrant.configure("2") do |config|
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
         set -x
-#        echo "vagrant" | passwd --stdin root
         dnf install --best -y git
 
         #install ansible test runner prerequisites
         dnf install --best -y ansible python2-dnf libselinux-python
 
-#        dnf copr enable -y merlinm/standard-test-roles
         dnf --enablerepo=updates-testing install --best -y  standard-test-roles
         if [ $? -ne 0 ]; then
             dnf install --best -y standard-test-roles
@@ -118,19 +116,6 @@ Vagrant.configure("2") do |config|
                 exit 1;
             fi
         fi
-
-        #WORKAROUND PR#69
-        dnf install -y patch
-        cd /etc/ansible/
-        curl -sS https://pagure.io/standard-test-roles/pull-request/69.patch > 69.patch
-        patch -p1 < 69.patch
-        cd -
-
-        #WORKAROUND PR#73
-        cd /etc/ansible/
-        curl -sS https://pagure.io/standard-test-roles/pull-request/73.patch > 73.patch
-        patch -p1 < 73.patch
-        cd -
 
         #If test name was given run the tests for it
         if [ -n "#{test_name}" ]; then
