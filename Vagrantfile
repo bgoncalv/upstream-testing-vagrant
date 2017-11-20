@@ -158,7 +158,7 @@ Vagrant.configure("2") do |config|
             fi
 
             #internal infra, people.redhat.com is okay though
-            grep -re ".*tp:.*redhat.com" | grep -v "people.redhat.com"
+            grep --exclude-dir=.git -re ".*\\.redhat.com" | grep -v "people.redhat.com"
             if [ $? -ne 1 ]; then
                 echo "FAIL: Found reference to internal infra"
                 exit 1
