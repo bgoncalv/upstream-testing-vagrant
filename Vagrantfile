@@ -126,6 +126,9 @@ Vagrant.configure("2") do |config|
             fi
             cd #{test_name}
 
+            #make sure package we want to test is installed
+            dnf install --best -y #{test_name}
+
             #Check if tests have any reference to bugzillas
             #using \\< and \\> to match whole words only
             bz_regex="\\(\\<bug\\>\\|bz\\)\\(_\\|#\\)*[[:digit:]]\\{4,9\\}"
