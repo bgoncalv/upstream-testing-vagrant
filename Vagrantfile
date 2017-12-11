@@ -103,6 +103,9 @@ Vagrant.configure("2") do |config|
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
         set -x
+        #Vagrant uses sudo run the the commands, and sudo uses $PATH defined by /etc/sudoers
+        #"Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin" and we want to avoid this
+        PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin"
         dnf install --best -y git
 
         #install ansible test runner prerequisites
@@ -131,14 +134,15 @@ Vagrant.configure("2") do |config|
 
             #Check if tests have any reference to bugzillas
             #using \\< and \\> to match whole words only
-            bz_regex="\\(\\<bug\\>\\|bz\\)\\(_\\|#\\)*[[:digit:]]\\{4,9\\}"
+            bz_regex="\\(\\<bug\\>\\|bz\\|rh\\)\\(_\\|#\\)*[[:digit:]]\\{4,9\\}"
             #test case names should not have reference to bugzilla
-            find . -not -iwholename '*.git*' | grep -i -e "$bz_regex"
+            #find . -not -iwholename '*.git*' | grep -i -e "$bz_regex"
+            ls -d */ | grep -i -e "$bz_regex"
             if [ $? -eq 0 ]; then
                 echo "FAIL: It looks like there is bugzilla reference on test case name"
                 exit 1
             fi
-            bz_regex="\\(\\<bug\\>\\|bz\\|bugzilla.redhat.com/show_bug.cgi?id=\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\{4,9\\}"
+            bz_regex="\\(\\<bug\\>\\|bz\\|rh\\|bugzilla.redhat.com/show_bug.cgi?id=\\)\\([[:space:]]\\|#\\|:\\)*[[:digit:]]\\{4,9\\}"
             #only interested on BZ numbers
             bz_nr=$(grep --exclude-dir=.git -r -i -o -e "$bz_regex" . | grep -o -i -e "[[:digit:]]\\{4,9\\}" | sort | uniq)
             if [ ! -z "$bz_nr" ]; then
