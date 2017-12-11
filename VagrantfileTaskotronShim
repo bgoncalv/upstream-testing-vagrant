@@ -104,6 +104,9 @@ Vagrant.configure("2") do |config|
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
         set -x
+        #Vagrant uses sudo run the the commands, and sudo uses $PATH defined by /etc/sudoers
+        #"Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin" and we want to avoid this
+        PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin"
         #echo "vagrant" | passwd --stdin root
         dnf install --best -y git
 
