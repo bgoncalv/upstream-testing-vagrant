@@ -173,7 +173,7 @@ Vagrant.configure("2") do |config|
             fi
 
             #make sure the license does not contain invalid information
-            grep --exclude-dir=.git "All rights reserved"
+            grep --exclude-dir=.git -r "All rights reserved"
             if [ $? -ne 1 ]; then
                 echo "FAIL: There is some problem with license"
                 exit 1
