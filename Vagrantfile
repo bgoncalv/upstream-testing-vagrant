@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "fedora/rawhide"
   config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/development"\
                       "/rawhide/CloudImages/x86_64/images/"\
-                      "Fedora-Cloud-Base-Vagrant-Rawhide-20171114.n.0.x86_64.vagrant-libvirt.box"
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180102.n.0.x86_64.vagrant-libvirt.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -172,6 +172,12 @@ Vagrant.configure("2") do |config|
                 exit 1
             fi
 
+            #make sure the license does not contain invalid information
+            grep --exclude-dir=.git "All rights reserved"
+            if [ $? -ne 1 ]; then
+                echo "FAIL: There is some problem with license"
+                exit 1
+            fi
 
             ANSIBLE_INVENTORY=$(test -e inventory && echo inventory || echo /usr/share/ansible/inventory)
             TEST_SUBJECTS=""
