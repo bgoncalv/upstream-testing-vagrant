@@ -120,6 +120,13 @@ Vagrant.configure("2") do |config|
             fi
         fi
 
+        #WORKAROUND PR#96
+        dnf install -y patch
+        cd /etc/ansible/
+        curl -sS https://pagure.io/standard-test-roles/pull-request/96.patch > 96.patch
+        patch -p1 < 96.patch
+        cd -
+
         #If test name was given run the tests for it
         if [ -n "#{test_name}" ]; then
             git clone https://upstreamfirst.fedorainfracloud.org/#{test_name}.git
