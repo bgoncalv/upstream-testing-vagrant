@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "fedora/rawhide"
   config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/development"\
                       "/rawhide/CloudImages/x86_64/images/"\
-                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180102.n.0.x86_64.vagrant-libvirt.box"
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180115.n.0.x86_64.vagrant-libvirt.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -103,6 +103,11 @@ Vagrant.configure("2") do |config|
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
         set -x
+        #Workaround to remove avc errors during but, such as
+        #https://bugzilla.redhat.com/show_bug.cgi?id=1532079
+        rm -f /var/log/audit/audit.log
+        service auditd restart
+
         #Vagrant uses sudo run the the commands, and sudo uses $PATH defined by /etc/sudoers
         #"Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin" and we want to avoid this
         PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin"
