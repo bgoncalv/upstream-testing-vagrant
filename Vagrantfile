@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "fedora/rawhide"
   config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/development"\
                       "/rawhide/CloudImages/x86_64/images/"\
-                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180115.n.0.x86_64.vagrant-libvirt.box"
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180128.n.0.x86_64.vagrant-libvirt.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -182,6 +182,14 @@ Vagrant.configure("2") do |config|
             if [ $? -ne 1 ]; then
                 echo "FAIL: There is some problem with license"
                 exit 1
+            fi
+
+            grep gnome-desktop-testing tests.yml
+            if [ $? -ne 1 ]; then
+                #install Workstation group to run DesktopQE tests
+                dnf groupinstall -y "Fedora Workstation"
+                systemctl enable gdm
+                systemctl start gdm
             fi
 
             ANSIBLE_INVENTORY=$(test -e inventory && echo inventory || echo /usr/share/ansible/inventory)
