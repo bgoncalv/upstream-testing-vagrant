@@ -184,7 +184,7 @@ Vagrant.configure("2") do |config|
                 exit 1
             fi
 
-            grep gnome-desktop-testing tests.yml
+            grep dogtail tests.yml
             if [ $? -ne 1 ]; then
                 #install Workstation group to run DesktopQE tests
                 dnf groupinstall -y "Fedora Workstation"

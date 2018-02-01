@@ -132,12 +132,16 @@ Vagrant.configure("2") do |config|
         #If test name was given run the tests for it
         if [ -n "#{test_name}" ]; then
 
-            grep gnome-desktop-testing tests.yml
-            if [ $? -ne 1 ]; then
-                #install Workstation group to run DesktopQE tests
-                dnf groupinstall -y "Fedora Workstation"
-                systemctl enable gdm
-                systemctl start gdm
+            #Check if test needs gnome session
+            git clone https://upstreamfirst.fedorainfracloud.org/#{test_name}.git
+            if [ -e #{test_name}/tests.yml ]; then
+                grep dogtail #{test_name}/tests.yml
+                if [ $? -ne 1 ]; then
+                    #install Workstation group to run DesktopQE tests
+                    dnf groupinstall -y "Fedora Workstation"
+                    systemctl enable gdm
+                    systemctl start gdm
+                fi
             fi
 
             cd task-standard-interface-shim
