@@ -192,6 +192,8 @@ Vagrant.configure("2") do |config|
                 dnf groupinstall -y "Fedora Workstation"
                 systemctl enable gdm
                 systemctl start gdm
+                #wait sometime until session start
+                sleep 60
             fi
 
             ANSIBLE_INVENTORY=$(test -e inventory && echo inventory || echo /usr/share/ansible/inventory)
