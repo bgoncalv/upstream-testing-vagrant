@@ -127,6 +127,8 @@ Vagrant.configure("2") do |config|
 
         #If test name was given run the tests for it
         if [ -n "#{test_name}" ]; then
+            #Workaround for SSL issue on upstreamfirst
+            export GIT_SSL_NO_VERIFY=true
             git clone https://upstreamfirst.fedorainfracloud.org/#{test_name}.git
             if [ $? -ne 0 ]; then
                 echo "FAIL: Could not clone repo for #{test_name}"
