@@ -190,10 +190,8 @@ Vagrant.configure("2") do |config|
             if [ $? -ne 1 ]; then
                 #install Workstation group to run DesktopQE tests
                 dnf groupinstall -y "Fedora Workstation"
-                systemctl enable gdm
-                systemctl start gdm
-                #wait sometime until session start
-                sleep 60
+                #systemctl enable gdm
+                #systemctl start gdm
             fi
 
             ANSIBLE_INVENTORY=$(test -e inventory && echo inventory || echo /usr/share/ansible/inventory)
