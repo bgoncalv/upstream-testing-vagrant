@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "fedora/rawhide"
   config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/development"\
                       "/rawhide/CloudImages/x86_64/images/"\
-                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180128.n.0.x86_64.vagrant-libvirt.box"
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180309.n.0.x86_64.vagrant-libvirt.box"
 
 
   # Disable automatic box update checking. If you disable this, then
@@ -116,7 +116,7 @@ Vagrant.configure("2") do |config|
         dnf install --best -y git
 
         #install libtaskotron
-        dnf install --best -y libtaskotron
+        dnf install --best -y libtaskotron koji
 
         dnf --enablerepo=updates-testing install --best -y  standard-test-roles 
         if [ $? -ne 0 ]; then

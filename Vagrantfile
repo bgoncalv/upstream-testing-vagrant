@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "fedora/rawhide"
   config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/development"\
                       "/rawhide/CloudImages/x86_64/images/"\
-                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180128.n.0.x86_64.vagrant-libvirt.box"
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180309.n.0.x86_64.vagrant-libvirt.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -116,6 +116,7 @@ Vagrant.configure("2") do |config|
         #install ansible test runner prerequisites
         dnf install --best -y ansible python2-dnf libselinux-python
 
+        #dnf copr enable -y @osci/standard-test-roles
         dnf --enablerepo=updates-testing install --best -y  standard-test-roles
         if [ $? -ne 0 ]; then
             dnf install --best -y standard-test-roles
