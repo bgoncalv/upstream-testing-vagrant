@@ -38,9 +38,9 @@ Vagrant.configure("2") do |config|
   #                    "/26/CloudImages/x86_64/images/Fedora-Cloud-Base-Vagrant-26-1"\
   #                    ".5.x86_64.vagrant-libvirt.box"
   config.vm.box = "fedora/rawhide"
-  config.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/development"\
-                      "/rawhide/CloudImages/x86_64/images/"\
-                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180309.n.0.x86_64.vagrant-libvirt.box"
+  config.vm.box_url = "https://dl.fedoraproject.org//pub/fedora/linux/development"\
+                      "/rawhide/Cloud/x86_64/images/"\
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180322.n.0.x86_64.vagrant-libvirt.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
