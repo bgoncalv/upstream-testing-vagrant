@@ -195,10 +195,15 @@ Vagrant.configure("2") do |config|
                 #systemctl start gdm
             fi
 
-            ANSIBLE_INVENTORY=$(test -e inventory && echo inventory || echo /usr/share/ansible/inventory)
             TEST_SUBJECTS=""
             TEST_ARTIFACTS=$PWD/artifacts
-            ansible-playbook --tags classic tests.yml
+            # Check if standard-test-roles version already provides sti tool or not
+            if [[ ! -e /usr/bin/sti ]]; then
+                ANSIBLE_INVENTORY=$(test -e inventory && echo inventory || echo /usr/share/ansible/inventory)
+                ansible-playbook --tags classic tests.yml
+            else
+                sti --tag classic
+            fi
             if [ $? -ne 0 ]; then
                 echo "FAIL: Could not execute ansible-playbook"
                 exit 1
