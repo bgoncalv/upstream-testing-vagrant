@@ -81,7 +81,7 @@ Vagrant.configure("2") do |config|
   # end
   #
   config.vm.provider "libvirt" do |libvirt|
-        libvirt.memory = 6144
+        libvirt.memory = 1024
         libvirt.cpu_mode = "host-model"
   end
   # View the documentation for the provider you are using for more
