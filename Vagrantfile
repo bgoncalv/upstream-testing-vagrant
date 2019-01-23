@@ -38,9 +38,8 @@ Vagrant.configure("2") do |config|
   #                    "/26/CloudImages/x86_64/images/Fedora-Cloud-Base-Vagrant-26-1"\
   #                    ".5.x86_64.vagrant-libvirt.box"
   config.vm.box = "fedora/rawhide"
-  config.vm.box_url = "https://dl.fedoraproject.org//pub/fedora/linux/development"\
-                      "/rawhide/Cloud/x86_64/images/"\
-                      "Fedora-Cloud-Base-Vagrant-Rawhide-20180526.n.0.x86_64.vagrant-libvirt.box"
+  config.vm.box_url = "https://dl.fedoraproject.org//pub/fedora/linux/development/rawhide/Cloud/x86_64/images/"\
+                      "Fedora-Cloud-Base-Vagrant-Rawhide-20190121.n.1.x86_64.vagrant-libvirt.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -112,6 +111,9 @@ Vagrant.configure("2") do |config|
         #"Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin" and we want to avoid this
         PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin"
         dnf install --best -y git
+
+        # ansible needs it due to https://github.com/ansible/ansible/issues/45852
+        dnf install --best -y python-unversioned-command
 
         #dnf copr enable -y @osci/standard-test-roles
         dnf --enablerepo=updates-testing install --best -y standard-test-roles
